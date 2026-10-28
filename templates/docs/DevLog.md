@@ -1,7 +1,7 @@
 # Project DevLog
 
 ## Day 1: Environment Setup & First Flask App
-**Date:** [Put today's date]
+**Date:** [28-10-2026]
 **Tasks Done:**
 - Set up WSL Ubuntu, Python3, pip, venv, and Git.
 - Installed MySQL and secured it with a root password.
@@ -18,7 +18,7 @@
 ---
 
 ## Day 2: Version Control (Git & GitHub)
-**Date:** [Put today's date]
+**Date:** [28-10-2026]
 **Tasks Done:**
 - Initialized Git in the project folder.
 - Created `.gitignore` to exclude `venv/` and `__pycache__/`.
@@ -31,7 +31,7 @@
 ---
 
 ## Day 3: Frontend - Login Page UI
-**Date:** [Put today's date]
+**Date:** [28-10-2026]
 **Tasks Done:**
 - Created `login.html` with CSS styling for a clean UI.
 - Updated `index.html` to act as a placeholder dashboard.
