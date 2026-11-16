@@ -77,3 +77,28 @@
 - [ ] Complete the File Management module (M-05: Update/Delete).
 - [ ] Begin implementing Storage Limits (M-07).
 - [ ] Start writing the `Dockerfile` for AWS deployment.
+
+## Week 1 — Completion
+
+### Day 6 — [17-11-2026] — Registration
+- **What I did:** Built the `/register` page and linked it to MySQL.
+- **Result:** Successfully created a test user. Password is saved as a hash (not plain text).
+- **Errors I hit:** `ModuleNotFoundError` for `.env` and `auth_helpers`. 
+- **How I fixed it:** Realized the files weren't created in the root directory. Created them and fixed the circular import by moving `db = SQLAlchemy()` to `extensions.py`.
+
+### Day 7 — [17-11-2026] — Login & Sessions
+- **What I did:** Built `/login`, `/dashboard`, and `/logout`. Used `session["user_id"]` to keep users logged in. Added a `@login_required` decorator to protect routes.
+- **Result:** All 4 login flow tests passed (logged out redirect, successful login, staying logged in on refresh, successful logout).
+
+### [17-11-2026] — Database Connection Troubleshooting (Very Important!)
+- **The Issue:** MySQL kept throwing `Access denied for user 'cfm_user'@'localhost'`.
+- **The Cause:** 1. The `.env` file didn't exist. 2. When re-creating the user, MySQL's default policy rejected simple passwords (`ERROR 1819`). 3. Special characters like `!` in the URL broke `pymysql` (`ERROR 1396`).
+- **The Fix:** Temporarily lowered MySQL's `validate_password.policy` to `LOW`, set a simple password (`CloudPass123`), and updated `.env` to match exactly.
+
+---
+
+## Week 2 — File Management
+
+### Day 8 — [17-11-2026] — File Uploads
+- **What I did:** Added a `File` model to `models.py`. Created an `uploads/` folder and added it to `.gitignore`. Built the `/upload` route using `werkzeug.utils.secure_filename`.
+- **Result:** Successfully uploaded a file. It saved to the folder AND the metadata (filename, size) saved to MySQL.
