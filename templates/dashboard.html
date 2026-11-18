@@ -1,70 +1,72 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard — Cloud File Manager</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center;">
     <h1>Welcome, {{ user.name }}</h1>
-    <p>Storage used: {{ user.storage_used }} bytes</p>
-    <a href="/logout">Log out</a>
-    <hr>
+    <a href="/logout" style="background: var(--danger-tint); color: var(--danger); padding: 0.5rem 1rem; border-radius: 8px;">Log out</a>
+</div>
+<p>Storage used: {{ user.storage_used }} bytes</p>
+<hr>
 
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <p style="color: {% if category=='error' %}red{% else %}green{% endif %};">{{ message }}</p>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
-    <!-- Search -->
-    <h2>Search Files</h2>
-    <form method="GET" action="/dashboard">
-        <input type="text" name="q" placeholder="Search filename..." value="{{ request.args.get('q', '') }}">
-        <button type="submit">Search</button>
-        <a href="/dashboard">Clear</a>
-    </form>
-    <br>
-
-    <!-- Create Folder -->
-    <h2>Create Folder</h2>
-    <form method="POST" action="/create_folder">
-        <input type="text" name="folder_name" required>
-        <button type="submit">Create</button>
-    </form>
-    <br>
-
-    <!-- Upload -->
-    <h2>Upload a File</h2>
-    <form method="POST" action="/upload" enctype="multipart/form-data">
-        <input type="file" name="file" required>
-        <!-- Dropdown to select folder during upload -->
-        <select name="folder_id">
-            <option value="">(Root Directory)</option>
-            {% for folder in folders %}
-                <option value="{{ folder.id }}">{{ folder.name }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Upload</button>
-    </form>
-
-    <hr>
-    <h2>Your Files</h2>
-    {% if files %}
-        <ul>
-        {% for f in files %}
-            <li>
-                {{ f.filename }} ({{ f.file_size }} bytes) 
-                - <a href="{{ url_for('download', file_id=f.id) }}">[Download]</a>
-                <form action="{{ url_for('delete', file_id=f.id) }}" method="POST" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Delete file?');">Delete</button>
-                </form>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No files found.</p>
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+        <p style="color: {% if category=='error' %}red{% else %}green{% endif %};">{{ message }}</p>
+    {% endfor %}
     {% endif %}
-</body>
-</html>
+{% endwith %}
+
+<!-- Search -->
+<h2>Search Files</h2>
+<form method="GET" action="/dashboard">
+    <input type="text" name="q" placeholder="Search filename..." value="{{ request.args.get('q', '') }}" style="flex: 1;">
+    <button type="submit">Search</button>
+    {% if request.args.get('q') %}
+        <a href="/dashboard" style="padding: 0.55rem;">Clear</a>
+    {% endif %}
+</form>
+<br>
+
+<!-- Create Folder -->
+<h2>Create Folder</h2>
+<form method="POST" action="/create_folder">
+    <input type="text" name="folder_name" placeholder="New folder name..." required style="flex: 1;">
+    <button type="submit">Create</button>
+</form>
+<br>
+
+<!-- Upload -->
+<h2>Upload a File</h2>
+<form method="POST" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="file" required style="flex: 1;">
+    <select name="folder_id">
+        <option value="">(Root Directory)</option>
+        {% for folder in folders %}
+            <option value="{{ folder.id }}">{{ folder.name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Upload</button>
+</form>
+
+<hr>
+<h2>Your Files</h2>
+{% if files %}
+    <ul>
+    {% for f in files %}
+        <li>
+            <!-- The CSS will automatically add the cool file icon here -->
+            <span>{{ f.filename }} ({{ f.file_size }} bytes)</span>
+            
+            <a href="{{ url_for('download', file_id=f.id) }}">Download</a>
+            
+            <form action="{{ url_for('delete', file_id=f.id) }}" method="POST" style="display:inline; margin:0;">
+                <button type="submit" onclick="return confirm('Delete file?');">Delete</button>
+            </form>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No files found.</p>
+{% endif %}
+{% endblock %}
