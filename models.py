@@ -15,11 +15,26 @@ class User(db.Model):
     created_at    = db.Column(db.DateTime, default=datetime.utcnow)
 
     def set_password(self, password):
-        # Never store plain passwords. This hashes it with a salt.
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def __repr__(self):
-        return f"<User {self.email}>"
+class Folder(db.Model):
+    __tablename__ = "folders"
+
+    id         = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id    = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    name       = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class File(db.Model):
+    __tablename__ = "files"
+
+    id            = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id       = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    folder_id     = db.Column(db.Integer, db.ForeignKey('folders.id'), nullable=True) # NULL means root
+    filename      = db.Column(db.String(255), nullable=False)
+    file_size     = db.Column(db.BigInteger, nullable=False)
+    mime_type     = db.Column(db.String(100))
+    uploaded_at   = db.Column(db.DateTime, default=datetime.utcnow)

@@ -2,6 +2,10 @@
 <html>
 <head>
     <title>Register — Cloud File Manager</title>
+  <style>
+    .flash-error { color: red; }
+    .flash-success { color: green; }
+  </style>
 </head>
 <body>
     <h1>Create an account</h1>
@@ -10,7 +14,8 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <p style="color: {% if category=='error' %}red{% else %}green{% endif %};">
+           <p role="{% if category == 'error' %}alert{% else %}status{% endif %}"
+             class="{% if category == 'error' %}flash-error{% else %}flash-success{% endif %}">
             {{ message }}
           </p>
         {% endfor %}
